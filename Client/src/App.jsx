@@ -56,8 +56,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🔍 Censys AI Data Summarizer</h1>
-        <p>Upload or paste your Censys host data to generate AI-powered insights</p>
+        <h1>🔍 CensysGPT 2.0 Beta</h1>
+        <p>CensysGPT beta simplifies building queries and empowers users to conduct efficient and effective reconnaissance operations. The tool enables users to quickly and easily gain insights into hosts on the internet, streamlining the process and allowing for more proactive threat hunting and attack surface management.</p>
       </header>
 
       <main className="app-main">
