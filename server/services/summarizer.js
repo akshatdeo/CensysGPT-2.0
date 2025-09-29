@@ -38,10 +38,18 @@ const OPENAI_MODELS = {
 
 async function callOpenAIModel(prompt, modelName, apiKey) {
   try {
-    const response = await axios.post(
-      `${OPENAI_API_BASE}/chat/completions`,
-      {
-        messages: [
+    // Models that use max_completion_tokens and don't support system messages
+    const usesCompletionTokens = ['o1-preview', 'o1-mini', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano'].some(m => modelName.includes(m));
+
+    // Build messages array - o1 and gpt-5 models don't support system messages
+    const messages = usesCompletionTokens
+      ? [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      : [
           {
             role: 'system',
             content: 'You are an expert cybersecurity analyst specializing in Censys host data analysis.'
@@ -50,24 +58,44 @@ async function callOpenAIModel(prompt, modelName, apiKey) {
             role: 'user',
             content: prompt
           }
-        ],
-        model: modelName,
-        temperature: 0.1,
-        max_tokens: 2000,
-        top_p: 1.0
-      },
+        ];
+
+    // Build request body
+    const requestBody = {
+      messages: messages,
+      model: modelName
+    };
+
+    // o1 and gpt-5 models don't support temperature/top_p parameters
+    if (!usesCompletionTokens) {
+      requestBody.temperature = 0.1;
+      requestBody.top_p = 1.0;
+    }
+
+    // Add the appropriate token limit parameter
+    // Note: o1 and gpt-5 models use reasoning_tokens internally, so we need higher limits
+    if (usesCompletionTokens) {
+      requestBody.max_completion_tokens = 8000; // Higher limit for reasoning + output
+    } else {
+      requestBody.max_tokens = 2000;
+    }
+
+    const response = await axios.post(
+      `${OPENAI_API_BASE}/chat/completions`,
+      requestBody,
       {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json'
         },
-        timeout: 60000 // 60 second timeout
+        timeout: 300000 // 5 minute timeout for reasoning models (o1/gpt-5)
       }
     );
 
     if (response.data?.choices?.[0]?.message?.content) {
       return response.data.choices[0].message.content;
     } else {
+      console.error('Unexpected API response:', JSON.stringify(response.data, null, 2));
       throw new Error('Invalid response format from OpenAI API');
     }
   } catch (error) {
@@ -118,8 +146,8 @@ export async function summarizeData(data, requestedModel = null) {
     }
 
     // Truncate large datasets
-    if (processedData.length > 20000) {
-      processedData = processedData.substring(0, 20000) + '\n\n[Data truncated for processing...]';
+    if (processedData.length > 200000) {
+      processedData = processedData.substring(0, 200000) + '\n\n[Data truncated for processing...]';
     }
 
     // Create the final prompt

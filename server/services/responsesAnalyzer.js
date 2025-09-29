@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const ANALYSIS_PROMPT = `You are an expert cybersecurity analyst specializing in Censys host data analysis.
 
-Analyze the provided Censys host dataset and provide a comprehensive security assessment.
+Analyze the provided Censys host dataset and provide a comprehensive, in-depth security assessment.
 
 Your analysis should include:
 
@@ -21,9 +21,10 @@ Analyze the data systematically:
 - Calculate statistics for ports, services, and geographic distribution
 - Identify high-risk patterns and anomalies
 - Cross-reference findings with known vulnerability databases
+- Provide evidence-based insights with specific examples from the data
 
 Format your final response as clear, structured text with bullet points.
-Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports) when relevant.
+Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports, IPs) when relevant.
 
 Dataset to analyze:
 {data}`;
@@ -61,7 +62,7 @@ async function callOpenAIChat(prompt, modelName, apiKey) {
       : [
           {
             role: 'system',
-            content: 'You are an expert cybersecurity analyst specializing in Censys host data analysis. Provide detailed, actionable security insights based on the data provided.'
+            content: 'You are an expert cybersecurity analyst specializing in Censys host data analysis. Provide detailed, evidence-based security insights with specific examples from the data.'
           },
           {
             role: 'user',
@@ -77,7 +78,7 @@ async function callOpenAIChat(prompt, modelName, apiKey) {
 
     // o1 and gpt-5 models don't support temperature parameter
     if (!usesCompletionTokens) {
-      requestBody.temperature = 0.1;
+      requestBody.temperature = 1;
     }
 
     // Add the appropriate token limit parameter
@@ -133,7 +134,7 @@ async function callOpenAIChat(prompt, modelName, apiKey) {
 /**
  * Analyze data using OpenAI Chat Completions API
  */
-export async function analyzeWithCodeInterpreter(data, requestedModel = null) {
+export async function analyzeWithResponsesAPI(data, requestedModel = null) {
   try {
     // Validate API key
     const apiKey = process.env.OPENAI_API_KEY;
@@ -145,7 +146,7 @@ export async function analyzeWithCodeInterpreter(data, requestedModel = null) {
     const modelKey = requestedModel || process.env.OPENAI_MODEL || 'gpt-4o';
     const modelName = OPENAI_MODELS[modelKey] || modelKey;
 
-    console.log(`🤖 Using OpenAI Model for analysis: ${modelName}`);
+    console.log(`🤖 Using OpenAI Model for comprehensive analysis: ${modelName}`);
 
     // Process input data
     let processedData;
@@ -160,7 +161,7 @@ export async function analyzeWithCodeInterpreter(data, requestedModel = null) {
       processedData = processedData.substring(0, 200000) + '\n\n[Data truncated for processing...]';
     }
 
-    console.log(`📊 Processing data for analysis (${processedData.length} characters)`);
+    console.log(`📊 Processing data for comprehensive analysis (${processedData.length} characters)`);
 
     // Create the final prompt
     const prompt = ANALYSIS_PROMPT.replace('{data}', processedData);
@@ -169,11 +170,11 @@ export async function analyzeWithCodeInterpreter(data, requestedModel = null) {
     console.log('🔍 Running comprehensive security analysis...');
     const analysis = await callOpenAIChat(prompt, modelName, apiKey);
 
-    console.log('✅ Analysis completed successfully');
+    console.log('✅ Comprehensive analysis completed successfully');
     return analysis;
 
   } catch (error) {
-    console.error('Error in analyzeWithCodeInterpreter:', error);
+    console.error('Error in analyzeWithResponsesAPI:', error);
 
     // Provide user-friendly error messages
     if (error.message.includes('OPENAI_API_KEY')) {

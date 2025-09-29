@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { analyzeWithCodeInterpreter } from './services/codeInterpreter.js';
+import { analyzeWithResponsesAPI } from './services/responsesAnalyzer.js';
 
 dotenv.config();
 
@@ -12,7 +12,11 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Censys AI Summarization API is running!' });
+  res.json({
+    message: 'Censys AI Summarization API is running!',
+    version: '2.0',
+    api: 'OpenAI Responses API'
+  });
 });
 
 app.post('/summarize', async (req, res) => {
@@ -28,7 +32,7 @@ app.post('/summarize', async (req, res) => {
     console.log('Received data for analysis:', typeof data, Array.isArray(data) ? data.length : 'N/A');
     console.log('Using model:', model || 'default (from env)');
 
-    const summary = await analyzeWithCodeInterpreter(data, model);
+    const summary = await analyzeWithResponsesAPI(data, model);
 
     res.json({
       success: true,
@@ -37,7 +41,8 @@ app.post('/summarize', async (req, res) => {
         dataType: typeof data,
         processedAt: new Date().toISOString(),
         recordCount: Array.isArray(data) ? data.length : 1,
-        method: 'code_interpreter'
+        method: 'responses_api',
+        api_version: '2.0'
       }
     });
   } catch (error) {
@@ -51,4 +56,5 @@ app.post('/summarize', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📡 Using OpenAI Responses API`);
 });
