@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DataInput from './components/DataInput'
 import SummaryDisplay from './components/SummaryDisplay'
 import LoadingSpinner from './components/LoadingSpinner'
@@ -12,6 +12,19 @@ function App() {
   const [error, setError] = useState('')
   const [metadata, setMetadata] = useState(null)
   const [selectedModel, setSelectedModel] = useState('gpt-4o-mini')
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode')
+    return saved ? JSON.parse(saved) : false
+  })
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode))
+    if (darkMode) {
+      document.body.classList.add('dark-mode')
+    } else {
+      document.body.classList.remove('dark-mode')
+    }
+  }, [darkMode])
 
   const handleSummarize = async (data, model) => {
     setLoading(true)
@@ -56,8 +69,17 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🔍 CensysGPT 2.0 Beta</h1>
-        <p>CensysGPT beta simplifies building queries and empowers users to conduct efficient and effective reconnaissance operations. The tool enables users to quickly and easily gain insights into hosts on the internet, streamlining the process and allowing for more proactive threat hunting and attack surface management.</p>
+        <div className="header-top">
+          <h1>🔍 CensysGPT 2.0 Beta</h1>
+          <button
+            className="theme-toggle"
+            onClick={() => setDarkMode(!darkMode)}
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
+        <p style={{ marginTop: '0.5rem' }}>CensysGPT beta simplifies building queries and empowers users to conduct efficient and effective reconnaissance operations. The tool enables users to quickly and easily gain insights into hosts on the internet, streamlining the process and allowing for more proactive threat hunting and attack surface management.</p>
       </header>
 
       <main className="app-main">
@@ -87,7 +109,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Built with React and GitHub Models API | CensysGPT 2.0 Beta</p>
+        <p>Built with React and GitHub Models API | CensysGPT 2.0 Beta | Built by Akshat Deo</p>
       </footer>
     </div>
   )
