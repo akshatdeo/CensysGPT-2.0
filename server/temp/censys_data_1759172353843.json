@@ -1,0 +1,55 @@
+{
+  "hosts": [
+    {
+      "ip": "192.168.1.100",
+      "location": {
+        "country": "US",
+        "city": "San Francisco"
+      },
+      "services": [
+        {
+          "port": 80,
+          "service": "http",
+          "banner": "nginx/1.20.1"
+        },
+        {
+          "port": 443,
+          "service": "https",
+          "banner": "nginx/1.20.1"
+        }
+      ],
+      "autonomous_system": {
+        "name": "Example Corp",
+        "asn": 12345
+      }
+    },
+    {
+      "ip": "10.0.0.50",
+      "location": {
+        "country": "CA",
+        "city": "Toronto"
+      },
+      "services": [
+        {
+          "port": 22,
+          "service": "ssh",
+          "banner": "OpenSSH_8.0"
+        },
+        {
+          "port": 3306,
+          "service": "mysql",
+          "banner": "MySQL 8.0.25"
+        }
+      ],
+      "autonomous_system": {
+        "name": "Test Networks",
+        "asn": 67890
+      }
+    }
+  ],
+  "metadata": {
+    "scan_date": "2024-01-15",
+    "total_hosts": 2,
+    "scan_type": "full_port_scan"
+  }
+}

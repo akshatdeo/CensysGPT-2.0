@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { summarizeData } from './services/summarizer.js';
+import { analyzeWithCodeInterpreter } from './services/codeInterpreter.js';
 
 dotenv.config();
 
@@ -25,10 +25,10 @@ app.post('/summarize', async (req, res) => {
       });
     }
 
-    console.log('Received data for summarization:', typeof data, Array.isArray(data) ? data.length : 'N/A');
+    console.log('Received data for analysis:', typeof data, Array.isArray(data) ? data.length : 'N/A');
     console.log('Using model:', model || 'default (from env)');
 
-    const summary = await summarizeData(data, model);
+    const summary = await analyzeWithCodeInterpreter(data, model);
 
     res.json({
       success: true,
@@ -36,13 +36,14 @@ app.post('/summarize', async (req, res) => {
       metadata: {
         dataType: typeof data,
         processedAt: new Date().toISOString(),
-        recordCount: Array.isArray(data) ? data.length : 1
+        recordCount: Array.isArray(data) ? data.length : 1,
+        method: 'code_interpreter'
       }
     });
   } catch (error) {
     console.error('Error in /summarize endpoint:', error);
     res.status(500).json({
-      error: 'Failed to generate summary',
+      error: 'Failed to generate analysis',
       details: error.message
     });
   }

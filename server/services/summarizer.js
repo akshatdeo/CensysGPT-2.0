@@ -22,36 +22,24 @@ Immediate Actions: Top 3 priority recommendations and key IOCs for blocking/moni
 Format your response as clear, structured text with bullet points where appropriate.
 Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports) when relevant`;
 
-// GitHub Models API configuration
-const GITHUB_API_BASE = 'https://models.github.ai';
+// OpenAI API configuration
+const OPENAI_API_BASE = 'https://api.openai.com/v1';
 
-// Available GitHub AI models (Official GitHub Models API format)
-const GITHUB_MODELS = {
-  // OpenAI Models (with provider prefix)
-  'gpt-4o': 'openai/gpt-4o',
-  'gpt-4o-mini': 'openai/gpt-4o-mini',
-  'gpt-3.5-turbo': 'openai/gpt-3.5-turbo',
-  'o1-mini': 'openai/o1-mini',
-
-  // Meta Llama Models
-  'Meta-Llama-3.1-8B-Instruct': 'meta/llama-3.1-8b-instruct',
-  'Meta-Llama-3.1-70B-Instruct': 'meta/llama-3.1-70b-instruct',
-  'Llama-3.2-11B-Vision-Instruct': 'meta/llama-3.2-11b-vision-instruct',
-
-  // Mistral Models
-  'Mistral-Large-2407': 'mistral/mistral-large-2407',
-  'Mistral-Nemo-Instruct-2407': 'mistral/mistral-nemo-instruct-2407',
-  'Ministral-3B': 'mistral/ministral-3b',
-
-  // Cohere Models
-  'Cohere-command-r-plus': 'cohere/command-r-plus',
-  'Cohere-command-r': 'cohere/command-r'
+// Available OpenAI models
+const OPENAI_MODELS = {
+  'gpt-4o': 'gpt-4o',
+  'gpt-4o-mini': 'gpt-4o-mini',
+  'gpt-4-turbo': 'gpt-4-turbo',
+  'gpt-4': 'gpt-4',
+  'gpt-3.5-turbo': 'gpt-3.5-turbo',
+  'o1-preview': 'o1-preview',
+  'o1-mini': 'o1-mini'
 };
 
-async function callGitHubModel(prompt, modelName, apiKey) {
+async function callOpenAIModel(prompt, modelName, apiKey) {
   try {
     const response = await axios.post(
-      `${GITHUB_API_BASE}/inference/chat/completions`,
+      `${OPENAI_API_BASE}/chat/completions`,
       {
         messages: [
           {
@@ -80,7 +68,7 @@ async function callGitHubModel(prompt, modelName, apiKey) {
     if (response.data?.choices?.[0]?.message?.content) {
       return response.data.choices[0].message.content;
     } else {
-      throw new Error('Invalid response format from GitHub Models API');
+      throw new Error('Invalid response format from OpenAI API');
     }
   } catch (error) {
     if (error.response) {
@@ -89,19 +77,15 @@ async function callGitHubModel(prompt, modelName, apiKey) {
       const data = error.response.data;
 
       if (status === 401) {
-        throw new Error('Invalid GitHub API token. Please check your GITHUB_TOKEN and ensure it has not expired.');
+        throw new Error('Invalid OpenAI API key. Please check your OPENAI_API_KEY and ensure it has not expired.');
       } else if (status === 403) {
-        const errorMsg = data?.error?.message || 'Access denied';
-        if (errorMsg.includes('fine-grained') || errorMsg.includes('organization')) {
-          throw new Error('Fine-grained token access denied. For fine-grained tokens, ensure: 1) Token has access to GitHub Models, 2) Organization allows fine-grained tokens, 3) Consider using a classic token instead.');
-        }
-        throw new Error(`Access denied: ${errorMsg}. Please ensure your GitHub token has the required permissions for GitHub Models API.`);
+        throw new Error('Access denied. Please ensure your OpenAI API key has the required permissions.');
       } else if (status === 429) {
         throw new Error('Rate limit exceeded. Please try again later.');
       } else if (status === 404) {
         throw new Error(`Model "${modelName}" not found. Please check the model name.`);
       } else {
-        throw new Error(`GitHub API error (${status}): ${data?.error?.message || 'Unknown error'}`);
+        throw new Error(`OpenAI API error (${status}): ${data?.error?.message || 'Unknown error'}`);
       }
     } else if (error.code === 'ECONNABORTED') {
       throw new Error('Request timeout. The model is taking too long to respond.');
@@ -114,18 +98,16 @@ async function callGitHubModel(prompt, modelName, apiKey) {
 export async function summarizeData(data, requestedModel = null) {
   try {
     // Validate required environment variables
-    const githubToken = process.env.GITHUB_TOKEN;
-    if (!githubToken) {
-      throw new Error('GITHUB_TOKEN environment variable is required for GitHub Models API');
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+    if (!openaiApiKey) {
+      throw new Error('OPENAI_API_KEY environment variable is required for OpenAI API');
     }
 
     // Get model configuration - use requested model or fall back to env/default
-    const modelKey = requestedModel || process.env.GITHUB_MODEL || 'gpt-4o-mini';
-    const modelName = GITHUB_MODELS[modelKey];
+    const modelKey = requestedModel || process.env.OPENAI_MODEL || 'gpt-4o-mini';
+    const modelName = OPENAI_MODELS[modelKey] || modelKey; // Allow custom model names
 
-    if (!modelName) {
-      throw new Error(`Unsupported model: ${modelKey}. Available models: ${Object.keys(GITHUB_MODELS).join(', ')}`);
-    }
+    console.log(`🤖 Using OpenAI Model: ${modelName}`);
 
     // Process input data
     let processedData;
@@ -143,19 +125,18 @@ export async function summarizeData(data, requestedModel = null) {
     // Create the final prompt
     const prompt = SUMMARIZATION_PROMPT.replace('{data}', processedData);
 
-    console.log(`🤖 Using GitHub Model: ${modelName}`);
     console.log(`📊 Processing data (${processedData.length} characters)`);
 
-    // Call GitHub Models API
-    const summary = await callGitHubModel(prompt, modelName, githubToken);
+    // Call OpenAI API
+    const summary = await callOpenAIModel(prompt, modelName, openaiApiKey);
 
     return summary;
   } catch (error) {
     console.error('Error in summarizeData:', error);
 
     // Re-throw with consistent error messages
-    if (error.message.includes('GITHUB_TOKEN')) {
-      throw new Error('GitHub API token configuration error. Please check your environment variables.');
+    if (error.message.includes('OPENAI_API_KEY')) {
+      throw new Error('OpenAI API key configuration error. Please check your environment variables.');
     }
 
     if (error.message.includes('rate limit') || error.message.includes('429')) {
