@@ -505,6 +505,21 @@
   margin: 2rem 0;
 }
 
+/* Footer */
+.app-footer {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  text-align: center;
+  border-top: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+.app-footer p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .app {

@@ -85,6 +85,10 @@ function App() {
           />
         )}
       </main>
+
+      <footer className="app-footer">
+        <p>Built with React and GitHub Models API | CensysGPT 2.0 Beta</p>
+      </footer>
     </div>
   )
 }
