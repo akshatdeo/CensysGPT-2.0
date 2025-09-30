@@ -19,10 +19,7 @@ A full-stack AI agent application that transforms Censys host data into actionab
 
 This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to language models including GPT-5 (with reasoning capabilities), GPT-4o, and GPT-3.5.
 
-**Architecture:**
-- **Frontend**: React 19 + Vite
-- **Backend**: Node.js + Express API with OpenAI integration
-- **AI**: OpenAI Chat Completions API.
+This app was created for me entry to the Censys take home assignment. As requested, it was made partly using generative AI tools, specifically Claude Code. 
 
 ## ✨ Features
 
@@ -57,7 +54,7 @@ This application provides an intelligent summarization service for Censys host d
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/akshatdeo/CensysGPT-2.0
 cd CensysGPT-2.0
 ```
 
@@ -75,7 +72,6 @@ cp .env.example .env
 
 # Edit .env with your OpenAI API key
 # OPENAI_API_KEY=your_openai_api_key_here
-# OPENAI_MODEL=gpt-5-mini  # or gpt-4o-mini for faster responses
 ```
 
 **Environment Variables:**
@@ -281,7 +277,9 @@ Dataset to Analyze:
 
 ## 🔮 Future Enhancements
 
-### High Priority (Next Sprint)
+Given the limited scope of this assignment, there are many desireable features that can be integrated. 
+
+### High Priority
 
 1. **Streaming Responses**
    - Implement SSE (Server-Sent Events) for real-time output
@@ -302,8 +300,6 @@ Dataset to Analyze:
    - Side-by-side analysis from different models
    - Performance metrics (speed, cost, quality)
    - A/B testing capabilities
-
-### Medium Priority (Future Releases)
 
 5. **Advanced Prompt Templates**
    - User-defined custom prompts
@@ -330,13 +326,6 @@ Dataset to Analyze:
    - Smart data chunking for large datasets
    - Cost tracking dashboard
 
-10. **Testing & CI/CD**
-    - Unit tests for all components
-    - Integration tests for API
-    - Automated deployment pipeline
-
-### Long-Term Vision
-
 11. **Fine-tuned Models**
     - Custom models trained on cybersecurity data
     - Domain-specific terminology recognition
@@ -346,12 +335,6 @@ Dataset to Analyze:
     - Anomaly detection algorithms
     - Trend prediction and forecasting
     - Automated risk scoring
-
-13. **Enterprise Features**
-    - SSO integration (SAML, OIDC)
-    - Audit logs and compliance reporting
-    - On-premise deployment options
-    - API rate limiting and quotas
 
 14. **Mobile Applications**
     - Native iOS app
@@ -381,8 +364,6 @@ CensysGPT-2.0/
 ├── server/                          # Node.js backend
 │   ├── services/
 │   │   ├── responsesAnalyzer.js     # Active OpenAI service (comprehensive)
-│   │   ├── codeInterpreter.js       # OpenAI service (extended analysis)
-│   │   └── summarizer.js            # OpenAI service (basic)
 │   ├── index.js                     # Express server & API routes
 │   ├── package.json                 # Backend dependencies
 │   └── .env.example                 # Environment template
@@ -415,8 +396,5 @@ CensysGPT-2.0/
 - Check browser console for CORS errors
 - Verify API_BASE_URL in App.jsx matches server port
 
-## 📄 License
-
-This project is licensed under the ISC License.
 
 
