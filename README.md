@@ -233,25 +233,26 @@ The application implements intelligent model detection and parameter adjustment:
 **Structured Prompt Design:**
 
 ```javascript
-const ANALYSIS_PROMPT = `You are an expert cybersecurity analyst...
+const ANALYSIS_PROMPT = `You are an autonomous cybersecurity analyst specializing in Censys host-data. Use Python for data analysis and web lookups for vulnerability enrichment.Do not output Python code
 
-Your analysis should include:
+ Analyze the provided Censys host dataset and provide a comprehensive, in-depth security assessment. Your analysis should include: 
+1. Overview: Dataset size, scope, and overall risk level (Critical/High/Medium/Low) 
+2. Critical Findings**: Immediate security threats requiring urgent attention - Active malware/C2 infrastructure - Critical vulnerabilities (CVSS ≥7.0) with CVE numbers - Known exploited vulnerabilities 
+3. Geographic & Infrastructure Patterns**: Notable hosting providers, ASNs, and geographic clustering 
+4. Service Analysis: Exposed services, unusual ports, and authentication gaps 
+5. Security Concerns: Misconfigurations, outdated software, and suspicious indicators 
+6. Immediate Actions: Top 3 priority recommendations and key IOCs for blocking/monitoring 
 
-1. **Overview**: Dataset size, scope, and overall risk level
-2. **Critical Findings**: Immediate security threats
-   - Active malware/C2 infrastructure
-   - Critical vulnerabilities (CVSS ≥7.0)
-   - Known exploited vulnerabilities
-3. **Geographic & Infrastructure Patterns**: Notable patterns
-4. **Service Analysis**: Exposed services and ports
-5. **Security Concerns**: Misconfigurations and indicators
-6. **Immediate Actions**: Top 3 recommendations
+Analyze the data systematically: 
+- Inspect the data structure and identify key security indicators 
+- Calculate statistics for ports, services, and geographic distribution 
+- Identify high-risk patterns and anomalies - Cross-reference findings with known vulnerability databases 
+- Provide evidence-based insights with specific examples from the data Format your final response as clear, structured text with bullet points. 
+Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports, IPs) when relevant. 
+Structure your output with proper capitlizations and formatting with section breaks for clarity. 
 
-Format: Clear, structured text with bullet points.
-Prioritize actionable insights with specific technical details.
-
-Dataset to analyze:
-{data}`;
+Dataset to Analyze:
+{Data}`;
 ```
 
 **Key Prompt Engineering Techniques:**
@@ -263,28 +264,11 @@ Dataset to analyze:
 
 ### 3. Error Handling & Resilience
 
-- **Graceful Degradation**: Invalid JSON processes as plain text
+- **File Format Error**: Invalid JSON processes as plain text
 - **Token Management**: Automatic truncation with user notification
-- **Retry Logic**: Timeout handling with user-friendly messages
-- **Model Fallbacks**: Supports multiple model options
+- **Timeout Handling**: Timeouts handled manually by user 
+- **Multiple Models**: Supports multiple GPT models
 
-### 4. Advanced Features
-
-**Dynamic Parameter Adjustment:**
-```javascript
-// Automatic detection and parameter adjustment
-const usesCompletionTokens = ['o1-preview', 'o1-mini', 'gpt-5'].some(m =>
-  modelName.includes(m)
-);
-
-if (usesCompletionTokens) {
-  requestBody.max_completion_tokens = 16000;  // Reasoning models
-  // No system message, no temperature
-} else {
-  requestBody.max_tokens = 4000;              // Standard models
-  requestBody.temperature = 0.1;              // Consistency
-}
-```
 
 ## 📝 Assumptions
 
