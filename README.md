@@ -23,7 +23,7 @@ A full-stack AI agent application that transforms Censys host data into actionab
 
 This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to language models including GPT-5 (with reasoning capabilities), GPT-4o, etc.
 
-This app was created for my entry to the Censys take home assignment. As requested, it was made partly using generative AI tools, specifically Claude Code. 
+This app was created for my entry to the Censys take home assignment. As requested, it was made partly using generative AI tools, specifically Claude Code. The name was chosen to specifically honor CensysGPT Beta, a tool I've used extensively before to help me formulate Censys queries. 
 
 ## 📁 Project Structure
 
