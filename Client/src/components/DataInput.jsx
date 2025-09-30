@@ -5,27 +5,22 @@ const DataInput = ({ onSummarize, loading, selectedModel, onModelChange }) => {
   const [textData, setTextData] = useState('')
   const [file, setFile] = useState(null)
 
-  // Available GitHub Models (Expanded list based on GitHub Models API)
+  // Available OpenAI Models for Responses API (September 2025)
   const availableModels = [
-    // OpenAI Models
-    { value: 'gpt-4o-mini', label: '🚀 GPT-4o Mini (Fast & Cost-effective)', description: 'OpenAI GPT-4o Mini - Recommended' },
-    { value: 'gpt-4o', label: '🧠 GPT-4o (Most Capable)', description: 'OpenAI GPT-4o - Best performance' },
-    { value: 'gpt-3.5-turbo', label: '⚡ GPT-3.5 Turbo (Fast)', description: 'OpenAI GPT-3.5 Turbo - Fast and reliable' },
-    { value: 'o1-mini', label: '🔬 O1 Mini (Reasoning)', description: 'OpenAI O1 Mini - Advanced reasoning' },
+    // GPT-5 Models (Latest - Recommended for Responses API)
+    { value: 'gpt-5', label: '🌟 GPT-5 (Most Advanced)', description: 'OpenAI GPT-5 - State-of-the-art reasoning and performance' },
+    { value: 'gpt-5-mini', label: '⚡ GPT-5 Mini (Recommended)', description: 'OpenAI GPT-5 Mini - Excellent balance of performance and cost' },
+    { value: 'gpt-5-nano', label: '🚀 GPT-5 Nano (Fastest)', description: 'OpenAI GPT-5 Nano - Lightweight and blazing fast' },
 
-    // Meta Llama Models
-    { value: 'Meta-Llama-3.1-8B-Instruct', label: '🦙 Llama 3.1 8B', description: 'Meta Llama 3.1 8B Instruct' },
-    { value: 'Meta-Llama-3.1-70B-Instruct', label: '🦙 Llama 3.1 70B', description: 'Meta Llama 3.1 70B Instruct' },
-    { value: 'Llama-3.2-11B-Vision-Instruct', label: '🦙 Llama 3.2 11B Vision', description: 'Meta Llama 3.2 11B Vision Instruct' },
+    // GPT-4o Models
+    { value: 'gpt-4o', label: '🧠 GPT-4o (Powerful)', description: 'OpenAI GPT-4o - Highly capable previous generation' },
+    { value: 'gpt-4o-mini', label: '💡 GPT-4o Mini', description: 'OpenAI GPT-4o Mini - Cost-effective option' },
 
-    // Mistral Models
-    { value: 'Mistral-Large-2407', label: '🌟 Mistral Large', description: 'Mistral Large 24.07' },
-    { value: 'Mistral-Nemo-Instruct-2407', label: '🌊 Mistral Nemo', description: 'Mistral Nemo Instruct' },
-    { value: 'Ministral-3B', label: '⭐ Ministral 3B', description: 'Ministral 3B - Edge optimized' },
+    // GPT-4 Models
+    { value: 'gpt-4-turbo', label: '⚙️ GPT-4 Turbo', description: 'OpenAI GPT-4 Turbo - Fast and capable' },
 
-    // Cohere Models
-    { value: 'Cohere-command-r-plus', label: '💎 Command R+', description: 'Cohere Command R+ - Enterprise RAG' },
-    { value: 'Cohere-command-r', label: '💫 Command R', description: 'Cohere Command R - Scalable RAG' }
+    // GPT-3.5
+    { value: 'gpt-3.5-turbo', label: '📊 GPT-3.5 Turbo', description: 'OpenAI GPT-3.5 Turbo - Budget-friendly baseline' }
   ]
 
   const handleFileChange = (event) => {

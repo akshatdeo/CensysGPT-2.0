@@ -11,7 +11,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [metadata, setMetadata] = useState(null)
-  const [selectedModel, setSelectedModel] = useState('gpt-4o-mini')
+  const [selectedModel, setSelectedModel] = useState('gpt-5-mini')
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode')
     return saved ? JSON.parse(saved) : false
@@ -79,7 +79,8 @@ function App() {
             {darkMode ? '☀️' : '🌙'}
           </button>
         </div>
-        <p style={{ marginTop: '0.5rem' }}>CensysGPT beta simplifies building queries and empowers users to conduct efficient and effective reconnaissance operations. The tool enables users to quickly and easily gain insights into hosts on the internet, streamlining the process and allowing for more proactive threat hunting and attack surface management.</p>
+        <p style={{ marginTop: '0.5rem' }}>CensysGPT beta simplifies building queries and empowers users to conduct efficient and effective reconnaissance operations. The tool enables users to quickly and easily gain insights into hosts on the internet, streamlining the process and allowing for more proactive threat hunting and attack surface management. Homage to Censys GPT @https://gpt.censys.io/</p>
+        {/* <p style={{ marginTop: '0.5rem' }}>Homage to Censys GPT @https://gpt.censys.io/ .</p> */}
       </header>
 
       <main className="app-main">
@@ -109,7 +110,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Built with React and GitHub Models API | CensysGPT 2.0 Beta | Built by Akshat Deo</p>
+        <p>Built with React and OpenAI API | CensysGPT 2.0 Beta | Built by Akshat Deo</p>
       </footer>
     </div>
   )

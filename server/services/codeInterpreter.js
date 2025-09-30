@@ -1,31 +1,37 @@
 import axios from 'axios';
 
-const SUMMARIZATION_PROMPT = `You are an expert cybersecurity analyst specializing in Censys host data analysis.
-Your task is to analyze the provided host data and create a comprehensive, actionable summary.
-Data to analyze:
-{data}
-Please provide a summary that includes:
+const ANALYSIS_PROMPT = `You are an expert cybersecurity analyst specializing in Censys host data analysis.
 
-Overview: Dataset size, scope, and overall risk level (Critical/High/Medium/Low)
-Critical Findings: Immediate security threats requiring urgent attention
+Analyze the provided Censys host dataset and provide a comprehensive security assessment.
 
-Active malware/C2 infrastructure
-Critical vulnerabilities (CVSS ≥7.0) with CVE numbers
-Known exploited vulnerabilities
+Your analysis should include:
 
+1. **Overview**: Dataset size, scope, and overall risk level (Critical/High/Medium/Low)
+2. **Critical Findings**: Immediate security threats requiring urgent attention
+   - Active malware/C2 infrastructure
+   - Critical vulnerabilities (CVSS ≥7.0) with CVE numbers
+   - Known exploited vulnerabilities
+3. **Geographic & Infrastructure Patterns**: Notable hosting providers, ASNs, and geographic clustering
+4. **Service Analysis**: Exposed services, unusual ports, and authentication gaps
+5. **Security Concerns**: Misconfigurations, outdated software, and suspicious indicators
+6. **Immediate Actions**: Top 3 priority recommendations and key IOCs for blocking/monitoring
 
-Geographic & Infrastructure Patterns: Notable hosting providers, ASNs, and geographic clustering
-Service Analysis: Exposed services, unusual ports, and authentication gaps
-Security Concerns: Misconfigurations, outdated software, and suspicious indicators
-Immediate Actions: Top 3 priority recommendations and key IOCs for blocking/monitoring
+Analyze the data systematically:
+- Inspect the data structure and identify key security indicators
+- Calculate statistics for ports, services, and geographic distribution
+- Identify high-risk patterns and anomalies
+- Cross-reference findings with known vulnerability databases
 
-Format your response as clear, structured text with bullet points where appropriate.
-Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports) when relevant`;
+Format your final response as clear, structured text with bullet points.
+Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports) when relevant.
+
+Dataset to analyze:
+{data}`;
 
 // OpenAI API configuration
 const OPENAI_API_BASE = 'https://api.openai.com/v1';
 
-// Available OpenAI models
+// Available OpenAI models for Chat Completions
 const OPENAI_MODELS = {
   'gpt-4o': 'gpt-4o',
   'gpt-4o-mini': 'gpt-4o-mini',
@@ -36,7 +42,10 @@ const OPENAI_MODELS = {
   'o1-mini': 'o1-mini'
 };
 
-async function callOpenAIModel(prompt, modelName, apiKey) {
+/**
+ * Call OpenAI Chat Completions API
+ */
+async function callOpenAIChat(prompt, modelName, apiKey) {
   try {
     // Models that use max_completion_tokens and don't support system messages
     const usesCompletionTokens = ['o1-preview', 'o1-mini', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano'].some(m => modelName.includes(m));
@@ -52,7 +61,7 @@ async function callOpenAIModel(prompt, modelName, apiKey) {
       : [
           {
             role: 'system',
-            content: 'You are an expert cybersecurity analyst specializing in Censys host data analysis.'
+            content: 'You are an expert cybersecurity analyst specializing in Censys host data analysis. Provide detailed, actionable security insights based on the data provided.'
           },
           {
             role: 'user',
@@ -66,18 +75,17 @@ async function callOpenAIModel(prompt, modelName, apiKey) {
       model: modelName
     };
 
-    // o1 and gpt-5 models don't support temperature/top_p parameters
+    // o1 and gpt-5 models don't support temperature parameter
     if (!usesCompletionTokens) {
       requestBody.temperature = 0.1;
-      requestBody.top_p = 1.0;
     }
 
     // Add the appropriate token limit parameter
     // Note: o1 and gpt-5 models use reasoning_tokens internally, so we need higher limits
     if (usesCompletionTokens) {
-      requestBody.max_completion_tokens = 8000; // Higher limit for reasoning + output
+      requestBody.max_completion_tokens = 16000; // Higher limit for reasoning + output
     } else {
-      requestBody.max_tokens = 2000;
+      requestBody.max_tokens = 4000;
     }
 
     const response = await axios.post(
@@ -100,7 +108,6 @@ async function callOpenAIModel(prompt, modelName, apiKey) {
     }
   } catch (error) {
     if (error.response) {
-      // API returned an error response
       const status = error.response.status;
       const data = error.response.data;
 
@@ -116,26 +123,29 @@ async function callOpenAIModel(prompt, modelName, apiKey) {
         throw new Error(`OpenAI API error (${status}): ${data?.error?.message || 'Unknown error'}`);
       }
     } else if (error.code === 'ECONNABORTED') {
-      throw new Error('Request timeout. The model is taking too long to respond.');
+      throw new Error('Request timeout. The analysis is taking too long to complete.');
     } else {
       throw new Error(`Network error: ${error.message}`);
     }
   }
 }
 
-export async function summarizeData(data, requestedModel = null) {
+/**
+ * Analyze data using OpenAI Chat Completions API
+ */
+export async function analyzeWithCodeInterpreter(data, requestedModel = null) {
   try {
-    // Validate required environment variables
-    const openaiApiKey = process.env.OPENAI_API_KEY;
-    if (!openaiApiKey) {
-      throw new Error('OPENAI_API_KEY environment variable is required for OpenAI API');
+    // Validate API key
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY environment variable is required');
     }
 
     // Get model configuration - use requested model or fall back to env/default
-    const modelKey = requestedModel || process.env.OPENAI_MODEL || 'gpt-4o-mini';
-    const modelName = OPENAI_MODELS[modelKey] || modelKey; // Allow custom model names
+    const modelKey = requestedModel || process.env.OPENAI_MODEL || 'gpt-4o';
+    const modelName = OPENAI_MODELS[modelKey] || modelKey;
 
-    console.log(`🤖 Using OpenAI Model: ${modelName}`);
+    console.log(`🤖 Using OpenAI Model for analysis: ${modelName}`);
 
     // Process input data
     let processedData;
@@ -145,36 +155,43 @@ export async function summarizeData(data, requestedModel = null) {
       processedData = JSON.stringify(data, null, 2);
     }
 
-    // Truncate large datasets
+    // Truncate very large datasets (increased limit for deeper analysis)
     if (processedData.length > 200000) {
       processedData = processedData.substring(0, 200000) + '\n\n[Data truncated for processing...]';
     }
 
-    // Create the final prompt
-    const prompt = SUMMARIZATION_PROMPT.replace('{data}', processedData);
+    console.log(`📊 Processing data for analysis (${processedData.length} characters)`);
 
-    console.log(`📊 Processing data (${processedData.length} characters)`);
+    // Create the final prompt
+    const prompt = ANALYSIS_PROMPT.replace('{data}', processedData);
 
     // Call OpenAI API
-    const summary = await callOpenAIModel(prompt, modelName, openaiApiKey);
+    console.log('🔍 Running comprehensive security analysis...');
+    const analysis = await callOpenAIChat(prompt, modelName, apiKey);
 
-    return summary;
+    console.log('✅ Analysis completed successfully');
+    return analysis;
+
   } catch (error) {
-    console.error('Error in summarizeData:', error);
+    console.error('Error in analyzeWithCodeInterpreter:', error);
 
-    // Re-throw with consistent error messages
+    // Provide user-friendly error messages
     if (error.message.includes('OPENAI_API_KEY')) {
       throw new Error('OpenAI API key configuration error. Please check your environment variables.');
     }
 
     if (error.message.includes('rate limit') || error.message.includes('429')) {
-      throw new Error('API rate limit exceeded. Please try again later.');
+      throw new Error('OpenAI API rate limit exceeded. Please try again later.');
+    }
+
+    if (error.message.includes('insufficient_quota')) {
+      throw new Error('OpenAI API quota exceeded. Please check your account billing.');
     }
 
     if (error.message.includes('timeout')) {
-      throw new Error('Request timeout. Please try with a smaller dataset or try again later.');
+      throw new Error('Analysis timeout. Please try with a smaller dataset or try again later.');
     }
 
-    throw new Error(`Summarization failed: ${error.message}`);
+    throw new Error(`Analysis failed: ${error.message}`);
   }
 }

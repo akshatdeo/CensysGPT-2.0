@@ -1,58 +1,70 @@
 # 🔍 Censys AI Data Summarizer
 
-A full-stack AI agent application that transforms Censys host data into actionable security insights using GitHub's AI Models API with multiple state-of-the-art language models.
+**AI Engineer Intern Take-Home Project**
+
+A full-stack AI agent application that transforms Censys host data into actionable security insights using OpenAI's advanced language models, including GPT-5 with chain-of-thought reasoning capabilities.
+
+## 📋 Table of Contents
+
+- [Project Overview](#-project-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Installation & Setup](#-installation--setup)
+- [Usage Guide](#-usage-guide)
+- [Testing Instructions](#-testing-instructions)
+- [AI Techniques & Prompt Engineering](#-ai-techniques--prompt-engineering)
+- [Assumptions](#-assumptions)
+- [Future Enhancements](#-future-enhancements)
+- [Project Structure](#-project-structure)
 
 ## 🎯 Project Overview
 
-This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with GitHub's AI Models API, providing access to multiple state-of-the-art language models including GPT-4o, Phi-3, Llama 3, and Mistral models.
+This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to state-of-the-art language models including GPT-5 (with reasoning capabilities), GPT-4o, and GPT-3.5.
 
 **Architecture:**
-- **Frontend**: React + Vite for a modern, responsive user interface
-- **Backend**: Node.js + Express API with direct GitHub Models integration
-- **AI**: GitHub Models API supporting GPT-4o, Phi-3, Llama 3, Mistral, and more
+- **Frontend**: React 19 + Vite for a modern, responsive user interface
+- **Backend**: Node.js + Express API with OpenAI integration
+- **AI**: OpenAI Chat Completions API supporting GPT-5, GPT-4o, o1, and more
 
-## 🚀 Features
+**Development Time**: ~4 hours (as per project requirements)
 
-- **Multi-format Data Input**: Support for JSON, CSV, and plain text data formats
-- **File Upload & Text Input**: Flexible data entry options with drag-and-drop support
-- **AI-Powered Analysis**: Advanced prompt engineering for cybersecurity-focused insights
-- **Multiple AI Models**: Choose from GPT-4o, Phi-3, Llama 3, Mistral, and other GitHub Models
+## ✨ Features
+
+- **AI-Powered Analysis**: Advanced LLM-based summarization with cybersecurity-focused prompts
+- **Multiple AI Models**: Support for GPT-5 (reasoning), GPT-4o, o1, and GPT-3.5
+- **Multi-format Data Input**: Support for JSON, CSV, and plain text formats
+- **File Upload & Text Input**: Flexible data entry with drag-and-drop support
 - **Rich Summary Output**: Structured analysis with geographic, service, and risk assessments
 - **Export Capabilities**: Copy to clipboard and download summaries
-- **Real-time Processing**: Live status updates and error handling
-- **Responsive Design**: Mobile-friendly interface with modern UI components
+- **Dark Mode**: Theme toggle with persistent preference
+- **Real-time Processing**: Live status updates and comprehensive error handling
+- **Responsive Design**: Mobile-friendly interface
 
-## 📁 Project Structure
+## 🛠 Tech Stack
 
-```
-CensysGPT-2.0/
-├── Client/                     # React frontend application
-│   ├── src/
-│   │   ├── components/         # React components
-│   │   │   ├── DataInput.jsx   # Data input interface
-│   │   │   ├── SummaryDisplay.jsx # Summary results display
-│   │   │   └── LoadingSpinner.jsx # Loading indicator
-│   │   ├── App.jsx            # Main application component
-│   │   ├── App.css           # Application styles
-│   │   └── main.jsx          # React entry point
-│   ├── package.json          # Frontend dependencies
-│   └── vite.config.js        # Vite configuration
-├── server/                    # Node.js backend API
-│   ├── services/
-│   │   └── summarizer.js     # GitHub Models AI integration
-│   ├── index.js              # Express server
-│   ├── package.json          # Backend dependencies
-│   └── .env.example          # Environment variables template
-└── README.md                 # This file
-```
+**Frontend:**
+- React 19 - Modern UI framework
+- Vite - Fast build tool and dev server
+- CSS3 - Responsive styling with dark mode
 
-## 🛠️ Installation & Setup
+**Backend:**
+- Node.js - JavaScript runtime
+- Express - Web application framework
+- Axios - HTTP client for API calls
+- dotenv - Environment variable management
+
+**AI Integration:**
+- OpenAI Chat Completions API
+- Model-specific parameter handling
+- Advanced prompt engineering for cybersecurity analysis
+
+## 🚀 Installation & Setup
 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm or yarn package manager
-- GitHub personal access token (for GitHub Models API)
+- npm package manager
+- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
 
 ### 1. Clone the Repository
 
@@ -70,13 +82,19 @@ cd server
 # Install dependencies
 npm install
 
-# Create environment file
+# Create environment file from template
 cp .env.example .env
 
-# Edit .env with your GitHub token
-# Get your token from: https://github.com/settings/tokens
-GITHUB_TOKEN=your_github_token_here
-GITHUB_MODEL=gpt-4o-mini
+# Edit .env with your OpenAI API key
+# OPENAI_API_KEY=your_openai_api_key_here
+# OPENAI_MODEL=gpt-5-mini  # or gpt-4o-mini for faster responses
+```
+
+**Environment Variables:**
+```env
+OPENAI_API_KEY=your_openai_api_key_here    # Required
+OPENAI_MODEL=gpt-5-mini                     # Optional, defaults to gpt-5-mini
+PORT=3001                                   # Optional, defaults to 3001
 ```
 
 ### 3. Frontend Setup
@@ -95,95 +113,52 @@ npm install
 ```bash
 cd server
 npm run dev
-# Server runs on http://localhost:3002
+# ✅ Server runs on http://localhost:3001
 ```
 
 **Terminal 2 - Frontend Application:**
 ```bash
 cd Client
 npm run dev
-# Frontend runs on http://localhost:5173
+# ✅ Frontend runs on http://localhost:5173
 ```
 
-The application will be available at `http://localhost:5173`
-
-## 🔧 Configuration
-
-### Environment Variables
-
-The backend uses environment variables for configuration:
-
-| Variable | Required | Description | Default |
-|----------|----------|-------------|---------|
-| `PORT` | No | Server port | 3002 |
-| `GITHUB_TOKEN` | Yes | GitHub personal access token | - |
-| `GITHUB_MODEL` | No | AI model to use | gpt-4o-mini |
-
-**Available Models:**
-- `gpt-4o` - Most capable OpenAI model
-- `gpt-4o-mini` - Faster, cost-effective OpenAI model (default)
-- `phi-3-medium-128k-instruct` - Microsoft Phi-3 Medium
-- `phi-3-mini-128k-instruct` - Microsoft Phi-3 Mini
-- `meta-llama-3-70b-instruct` - Meta Llama 3 70B
-- `meta-llama-3-8b-instruct` - Meta Llama 3 8B
-- `mistral-large` - Mistral Large
-- `mistral-nemo` - Mistral Nemo
-- `mistral-small` - Mistral Small
-
-### Getting GitHub Access Token
-
-You can use either a **Classic Token** (recommended) or a **Fine-grained Token**:
-
-#### Option 1: Classic Token (Recommended)
-1. Go to [GitHub Settings > Tokens](https://github.com/settings/tokens)
-2. Click "Generate new token (classic)"
-3. Give it a descriptive name (e.g., "Censys AI Summarizer")
-4. **No additional scopes needed** - GitHub Models works with basic token permissions
-5. Copy the generated token to your `.env` file
-
-#### Option 2: Fine-grained Token
-1. Go to [GitHub Settings > Tokens](https://github.com/settings/tokens)
-2. Click "Generate new token" → "Fine-grained personal access token"
-3. Configure repository access (if required by your organization)
-4. **Note**: Fine-grained tokens may have additional restrictions:
-   - Organization policy may block fine-grained tokens
-   - May require specific repository permissions
-   - GitHub Models API compatibility varies
-5. If you encounter access issues, consider using a classic token instead
-
-### Switching AI Models
-
-To switch between AI models, update your `.env` file:
-
-```bash
-# For GPT-4o (most capable)
-GITHUB_MODEL=gpt-4o
-
-# For faster processing
-GITHUB_MODEL=gpt-4o-mini
-
-# For open-source alternatives
-GITHUB_MODEL=meta-llama-3-8b-instruct
-GITHUB_MODEL=phi-3-mini-128k-instruct
-```
+**Access the application**: Open your browser to `http://localhost:5173`
 
 ## 📖 Usage Guide
 
-### 1. Data Input Methods
+### 1. Loading Data
 
-**Text Input:**
-- Paste JSON data directly into the textarea
-- Use the "Load Sample Data" button to see example format
-- Supports both structured JSON and plain text
+**Option A: Text Input**
+1. Paste JSON data directly into the text area
+2. Click "Load Sample Data" to see example format
+3. Supports both structured JSON and plain text
 
-**File Upload:**
-- Drag and drop or browse for files
-- Supported formats: `.json`, `.txt`, `.csv`
-- Files are processed client-side for privacy
+**Option B: File Upload**
+1. Drag and drop or browse for files
+2. Supported formats: `.json`, `.txt`, `.csv`
+3. Files are processed client-side
 
-### 2. Sample Data Format
+### 2. Selecting AI Model
 
-The application works best with structured Censys host data:
+Choose from available models:
+- **gpt-5-mini** - Advanced reasoning, best quality (recommended)
+- **gpt-4o-mini** - Fast and cost-effective
+- **gpt-4o** - Powerful previous generation
+- **o1-mini** - Reasoning model alternative
+
+### 3. Generating Summary
+
+1. Click "Generate Summary"
+2. Wait for analysis (30-120 seconds for reasoning models)
+3. View structured security insights
+
+### 4. Exporting Results
+
+- **Copy to Clipboard**: One-click copy
+- **Download**: Save as text file
+
+### Sample Data Format
 
 ```json
 {
@@ -210,26 +185,43 @@ The application works best with structured Censys host data:
 }
 ```
 
-### 3. Understanding Summaries
-
-AI-generated summaries include:
-- **Overview**: Dataset scope and size
-- **Key Findings**: Most significant security insights
-- **Geographic Distribution**: Location-based patterns
-- **Service Analysis**: Common ports and protocols
-- **Security Concerns**: Potential vulnerabilities
-- **Risk Assessment**: Overall threat evaluation
-
 ## 🧪 Testing Instructions
 
 ### Manual Testing
 
-1. **Start both servers** (backend and frontend)
-2. **Load sample data** using the provided button
-3. **Generate summary** and verify AI response
-4. **Test file upload** with a JSON file
-5. **Verify error handling** with invalid data
-6. **Test export features** (copy/download)
+1. **Start both servers** (backend and frontend as described above)
+
+2. **Test Sample Data**
+   ```bash
+   # In the UI:
+   - Click "Load Sample Data" button
+   - Select a model (e.g., gpt-4o-mini for faster testing)
+   - Click "Generate Summary"
+   - Verify summary appears with structured sections
+   ```
+
+3. **Test File Upload**
+   - Create a small JSON file with host data
+   - Drag and drop into the upload area
+   - Verify file content loads into text area
+   - Generate summary and verify results
+
+4. **Test Error Handling**
+   ```bash
+   # Invalid data:
+   - Enter "invalid json data"
+   - Should gracefully process as text
+
+   # Missing API key:
+   - Remove OPENAI_API_KEY from .env
+   - Restart server
+   - Should show configuration error
+   ```
+
+5. **Test Export Features**
+   - Generate a summary
+   - Click "Copy to Clipboard" - verify copied
+   - Click "Download Summary" - verify file downloads
 
 ### API Testing
 
@@ -237,133 +229,282 @@ Test the backend directly:
 
 ```bash
 # Test server health
-curl http://localhost:3002/
+curl http://localhost:3001/
+
+# Expected output:
+{
+  "message": "Censys AI Summarization API is running!",
+  "version": "2.0",
+  "api": "OpenAI Responses API"
+}
 
 # Test summarization endpoint
-curl -X POST http://localhost:3002/summarize \
+curl -X POST http://localhost:3001/summarize \
   -H "Content-Type: application/json" \
-  -d '{"data": {"test": "sample data"}}'
+  -d '{"data": {"test": "sample host data"}, "model": "gpt-4o-mini"}'
+
+# Expected: JSON response with summary and metadata
 ```
 
 ### Expected Behavior
 
-- ✅ Valid data should generate structured summaries
-- ✅ Invalid JSON should fall back to text processing
-- ✅ Missing GitHub token should show configuration errors
-- ✅ Large datasets should be truncated gracefully
-- ✅ Network errors should display user-friendly messages
+✅ **Valid data** → Structured summaries with security insights
+✅ **Invalid JSON** → Falls back to text processing
+✅ **Missing API key** → Configuration error message
+✅ **Large datasets** → Automatically truncated to 200KB
+✅ **Network errors** → User-friendly error messages
+✅ **Reasoning models** → Extended processing time (normal)
 
-## 🤖 AI Techniques & Implementation
+## 🤖 AI Techniques & Prompt Engineering
 
-### GitHub Models Integration
+### 1. Model Selection Strategy
 
-The application integrates directly with GitHub's AI Models API for:
-- **Model Variety**: Access to GPT-4o, Phi-3, Llama 3, Mistral, and more
-- **Cost Efficiency**: Competitive pricing and free tier availability
-- **Performance**: Direct API integration for fast responses
-- **Reliability**: Enterprise-grade infrastructure and uptime
+The application implements intelligent model detection and parameter adjustment:
 
-### Prompt Engineering
+**Reasoning Models (GPT-5, o1)**
+- Use chain-of-thought processing for deeper analysis
+- Require higher token limits (16,000 vs 4,000)
+- No system messages (user messages only)
+- No temperature control (model-optimized)
+- Extended timeout (300 seconds)
 
-The summarization prompt is specifically designed for cybersecurity analysis:
+**Standard Models (GPT-4o, GPT-3.5)**
+- Direct response generation
+- Standard token limits (2,000-4,000)
+- System + user message structure
+- Temperature control (0.1 for consistency)
+- Standard timeout (300 seconds)
+
+### 2. Prompt Engineering
+
+**Structured Prompt Design:**
 
 ```javascript
-const SUMMARIZATION_PROMPT = `You are an expert cybersecurity analyst...
-1. **Overview**: Brief description of the dataset
-2. **Key Findings**: Security insights and patterns
-3. **Geographic Distribution**: Location patterns
-4. **Service Analysis**: Common services and ports
-5. **Security Concerns**: Vulnerabilities
-6. **Risk Assessment**: Overall threat level
+const ANALYSIS_PROMPT = `You are an expert cybersecurity analyst...
+
+Your analysis should include:
+
+1. **Overview**: Dataset size, scope, and overall risk level
+2. **Critical Findings**: Immediate security threats
+   - Active malware/C2 infrastructure
+   - Critical vulnerabilities (CVSS ≥7.0)
+   - Known exploited vulnerabilities
+3. **Geographic & Infrastructure Patterns**: Notable patterns
+4. **Service Analysis**: Exposed services and ports
+5. **Security Concerns**: Misconfigurations and indicators
+6. **Immediate Actions**: Top 3 recommendations
+
+Format: Clear, structured text with bullet points.
+Prioritize actionable insights with specific technical details.
+
+Dataset to analyze:
+{data}`;
 ```
 
-### Model Configuration
+**Key Prompt Engineering Techniques:**
+- **Role Definition**: Establishes expert cybersecurity analyst persona
+- **Structured Output**: Enforces consistent 6-section format
+- **Specificity**: Requests CVE IDs, CVSS scores, ports, IPs
+- **Actionability**: Emphasizes recommendations over descriptions
+- **Context Injection**: Embeds actual data within prompt
 
-- **Temperature**: Set to 0.1 for consistent, factual outputs
-- **Max Tokens**: Limited to 2000 for concise summaries
-- **Data Truncation**: Large datasets limited to 20,000 characters
-- **Fallback Handling**: Graceful degradation for API failures
+### 3. Data Processing Pipeline
 
-## 🚧 Current Limitations
+```
+User Input → Frontend Validation → JSON Parsing
+              ↓
+     Truncation (200KB limit) → Prompt Template Injection
+              ↓
+     Model Detection → Parameter Adjustment
+              ↓
+     OpenAI API Call → Response Validation
+              ↓
+     Frontend Display → Export Options
+```
 
-1. **Data Size**: Limited to ~20KB per request for optimal performance
-2. **Rate Limits**: Dependent on chosen LLM provider's API limits
-3. **Context Window**: Large datasets may lose detail due to truncation
-4. **Real-time Processing**: No streaming responses (batch processing only)
-5. **Authentication**: No user management or API key validation
+### 4. Error Handling & Resilience
+
+- **Graceful Degradation**: Invalid JSON processes as plain text
+- **Token Management**: Automatic truncation with user notification
+- **Retry Logic**: Timeout handling with user-friendly messages
+- **Model Fallbacks**: Supports multiple model options
+
+### 5. Advanced Features
+
+**Dynamic Parameter Adjustment:**
+```javascript
+// Automatic detection and parameter adjustment
+const usesCompletionTokens = ['o1-preview', 'o1-mini', 'gpt-5'].some(m =>
+  modelName.includes(m)
+);
+
+if (usesCompletionTokens) {
+  requestBody.max_completion_tokens = 16000;  // Reasoning models
+  // No system message, no temperature
+} else {
+  requestBody.max_tokens = 4000;              // Standard models
+  requestBody.temperature = 0.1;              // Consistency
+}
+```
+
+## 📝 Assumptions
+
+1. **OpenAI API Access**: Users have a valid OpenAI API key with available quota
+2. **Data Format**: Input data follows general Censys host data structure (flexible parsing)
+3. **Internet Connectivity**: Active internet connection for API calls
+4. **Modern Browser**: Recent versions of Chrome, Firefox, Safari, or Edge
+5. **Data Size**: Datasets under 200KB for optimal performance (larger data truncated)
+6. **Single User**: No authentication or multi-user session management
+7. **Local Development**: Application runs on localhost (production deployment not configured)
+8. **API Costs**: Users are aware of OpenAI API usage costs (varies by model)
 
 ## 🔮 Future Enhancements
 
-### Short Term
-- [ ] **Streaming Responses**: Real-time summary generation
-- [ ] **Data Persistence**: Save and retrieve previous summaries
-- [ ] **Export Formats**: PDF, Word, and CSV export options
-- [ ] **Batch Processing**: Handle multiple files simultaneously
-- [ ] **Theme Support**: Dark/light mode toggle
+### High Priority (Next Sprint)
 
-### Medium Term
-- [ ] **Advanced Analytics**: Statistical analysis and trend detection
-- [ ] **Custom Prompts**: User-defined analysis templates
-- [ ] **Collaboration**: Share summaries with team members
-- [ ] **API Rate Limiting**: Built-in request throttling
-- [ ] **Data Visualization**: Charts and graphs for insights
+1. **Streaming Responses**
+   - Implement SSE (Server-Sent Events) for real-time output
+   - Show progressive analysis results as they generate
+   - Reduce perceived latency for reasoning models
 
-### Long Term
-- [ ] **Fine-tuned Models**: Custom models trained on cybersecurity data
-- [ ] **Real-time Integration**: Direct Censys API connectivity
-- [ ] **Machine Learning**: Pattern recognition and anomaly detection
-- [ ] **Enterprise Features**: SSO, audit logs, compliance reporting
-- [ ] **Mobile App**: Native iOS/Android applications
+2. **Enhanced Data Visualization**
+   - Interactive charts for geographic distribution
+   - Port/service distribution graphs
+   - Risk level pie charts and heatmaps
+
+3. **Batch Processing**
+   - Upload multiple files simultaneously
+   - Parallel processing with progress tracking
+   - Bulk export functionality
+
+4. **Model Comparison**
+   - Side-by-side analysis from different models
+   - Performance metrics (speed, cost, quality)
+   - A/B testing capabilities
+
+### Medium Priority (Future Releases)
+
+5. **Advanced Prompt Templates**
+   - User-defined custom prompts
+   - Template library for different analysis types
+   - Prompt versioning and management
+
+6. **Data Persistence**
+   - Save analysis history to database
+   - Search and filter previous summaries
+   - Export historical data to CSV/PDF
+
+7. **Authentication & Multi-User**
+   - User accounts with OAuth integration
+   - Team workspaces and sharing
+   - Role-based access control
+
+8. **Real-time Censys Integration**
+   - Direct Censys API connectivity
+   - Query builder interface
+   - Automatic data refresh
+
+9. **Cost Optimization**
+   - Local caching of common queries
+   - Smart data chunking for large datasets
+   - Cost tracking dashboard
+
+10. **Testing & CI/CD**
+    - Unit tests for all components
+    - Integration tests for API
+    - Automated deployment pipeline
+
+### Long-Term Vision
+
+11. **Fine-tuned Models**
+    - Custom models trained on cybersecurity data
+    - Domain-specific terminology recognition
+    - Improved accuracy for security patterns
+
+12. **Machine Learning Features**
+    - Anomaly detection algorithms
+    - Trend prediction and forecasting
+    - Automated risk scoring
+
+13. **Enterprise Features**
+    - SSO integration (SAML, OIDC)
+    - Audit logs and compliance reporting
+    - On-premise deployment options
+    - API rate limiting and quotas
+
+14. **Mobile Applications**
+    - Native iOS app
+    - Native Android app
+    - Push notifications for critical findings
+
+15. **Advanced Analytics**
+    - Natural language query interface
+    - Correlation analysis across datasets
+    - Threat intelligence feed integration
+
+## 📁 Project Structure
+
+```
+CensysGPT-2.0/
+├── Client/                          # React frontend
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── DataInput.jsx        # File/text input component
+│   │   │   ├── SummaryDisplay.jsx   # Results display component
+│   │   │   └── LoadingSpinner.jsx   # Loading state component
+│   │   ├── App.jsx                  # Main application component
+│   │   ├── App.css                  # Application styles
+│   │   └── main.jsx                 # React entry point
+│   ├── package.json                 # Frontend dependencies
+│   └── vite.config.js               # Vite configuration
+├── server/                          # Node.js backend
+│   ├── services/
+│   │   ├── responsesAnalyzer.js     # Active OpenAI service (comprehensive)
+│   │   ├── codeInterpreter.js       # OpenAI service (extended analysis)
+│   │   └── summarizer.js            # OpenAI service (basic)
+│   ├── index.js                     # Express server & API routes
+│   ├── package.json                 # Backend dependencies
+│   └── .env.example                 # Environment template
+├── CLAUDE.md                        # Developer guidance
+└── README.md                        # This file
+```
 
 ## 🔒 Security Considerations
 
 - **API Keys**: Stored server-side only, never exposed to frontend
 - **Data Privacy**: File processing happens client-side when possible
 - **Input Validation**: Sanitized data input and error handling
-- **CORS Protection**: Configured for local development
-- **Rate Limiting**: Recommend implementing in production
+- **CORS**: Configured for local development (restrict in production)
+- **Environment Variables**: Sensitive data in .env (not committed)
 
 ## 🐛 Troubleshooting
 
-### Common Issues
+**"OpenAI API key configuration error"**
+- Verify OPENAI_API_KEY is set in `server/.env`
+- Restart backend server after changing .env
+- Check API key is valid at OpenAI dashboard
 
-**"GitHub API token configuration error"**
-- Verify your GitHub token is correctly set in `.env`
-- Ensure your token has not expired
-- Restart the backend server after changing environment variables
-- **For fine-grained tokens**: Check organization policies and repository access
-- **If issues persist**: Try generating a classic token instead
+**"Request timeout"**
+- Normal for GPT-5/o1 reasoning models (up to 2-3 minutes)
+- Try gpt-4o-mini for faster responses
+- Reduce dataset size if timeout persists
 
-**"Failed to generate summary"**
-- Check internet connectivity
-- Verify API quota/billing status
-- Try with smaller data samples
-- Check browser console for detailed errors
-
-**Frontend not connecting to backend**
-- Ensure backend server is running on port 3002
-- Check for CORS issues in browser console
-- Verify `API_BASE_URL` in frontend matches backend port
-
-### Getting Help
-
-1. Check the browser developer console for detailed error messages
-2. Review backend server logs for API-related issues
-3. Verify your data format matches expected JSON structure
-4. Test with the provided sample data first
+**"Frontend not connecting to backend"**
+- Ensure backend is running on port 3001
+- Check browser console for CORS errors
+- Verify API_BASE_URL in App.jsx matches server port
 
 ## 📄 License
 
-This project is licensed under the ISC License - see the package.json files for details.
+This project is licensed under the ISC License.
 
-## 🤝 Contributing
+## 🙏 Acknowledgments
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- **Censys**: For providing the project requirements and sample data
+- **OpenAI**: For providing advanced language models
+- **React & Vite**: For modern frontend development tools
 
 ---
 
-**Built with ❤️ for the cybersecurity community**
+**Built as an AI Engineer Intern take-home project**
+**Completed in ~4 hours using AI-assisted development techniques**
