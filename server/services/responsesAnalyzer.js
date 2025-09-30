@@ -1,33 +1,25 @@
 import axios from 'axios';
 
-const ANALYSIS_PROMPT = `You are an expert cybersecurity analyst specializing in Censys host data analysis.
+const ANALYSIS_PROMPT = `You are an autonomous cybersecurity analyst specializing in Censys host-data. Use Python for data analysis and web lookups for vulnerability enrichment.Do not output Python code
 
-Analyze the provided Censys host dataset and provide a comprehensive, in-depth security assessment.
+ Analyze the provided Censys host dataset and provide a comprehensive, in-depth security assessment. Your analysis should include: 
+1. Overview: Dataset size, scope, and overall risk level (Critical/High/Medium/Low) 
+2. Critical Findings**: Immediate security threats requiring urgent attention - Active malware/C2 infrastructure - Critical vulnerabilities (CVSS ≥7.0) with CVE numbers - Known exploited vulnerabilities 
+3. Geographic & Infrastructure Patterns**: Notable hosting providers, ASNs, and geographic clustering 
+4. Service Analysis: Exposed services, unusual ports, and authentication gaps 
+5. Security Concerns: Misconfigurations, outdated software, and suspicious indicators 
+6. Immediate Actions: Top 3 priority recommendations and key IOCs for blocking/monitoring 
 
-Your analysis should include:
+Analyze the data systematically: 
+- Inspect the data structure and identify key security indicators 
+- Calculate statistics for ports, services, and geographic distribution 
+- Identify high-risk patterns and anomalies - Cross-reference findings with known vulnerability databases 
+- Provide evidence-based insights with specific examples from the data Format your final response as clear, structured text with bullet points. 
+Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports, IPs) when relevant. 
+Structure your output with proper capitlizations and formatting with section breaks for clarity. 
 
-1. **Overview**: Dataset size, scope, and overall risk level (Critical/High/Medium/Low)
-2. **Critical Findings**: Immediate security threats requiring urgent attention
-   - Active malware/C2 infrastructure
-   - Critical vulnerabilities (CVSS ≥7.0) with CVE numbers
-   - Known exploited vulnerabilities
-3. **Geographic & Infrastructure Patterns**: Notable hosting providers, ASNs, and geographic clustering
-4. **Service Analysis**: Exposed services, unusual ports, and authentication gaps
-5. **Security Concerns**: Misconfigurations, outdated software, and suspicious indicators
-6. **Immediate Actions**: Top 3 priority recommendations and key IOCs for blocking/monitoring
 
-Analyze the data systematically:
-- Inspect the data structure and identify key security indicators
-- Calculate statistics for ports, services, and geographic distribution
-- Identify high-risk patterns and anomalies
-- Cross-reference findings with known vulnerability databases
-- Provide evidence-based insights with specific examples from the data
-
-Format your final response as clear, structured text with bullet points.
-Prioritize actionable insights over descriptive analysis. Include specific technical details (CVE IDs, CVSS scores, ports, IPs) when relevant.
-
-Dataset to analyze:
-{data}`;
+Dataset to analyze: {data}`;
 
 // OpenAI API configuration
 const OPENAI_API_BASE = 'https://api.openai.com/v1';
