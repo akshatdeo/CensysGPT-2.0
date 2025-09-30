@@ -5,26 +5,52 @@ A full-stack AI agent application that transforms Censys host data into actionab
 ## 📋 Table of Contents
 
 - [Project Overview](#-project-overview)
+- [Project Structure](#-project-structure)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Installation & Setup](#-installation--setup)
 - [Usage Guide](#-usage-guide)
 - [Testing Instructions](#-testing-instructions)
-- [AI Techniques & Prompt Engineering](#-ai-techniques--prompt-engineering)
+- [rompt Engineering](#-prompt-engineering)
 - [Assumptions](#-assumptions)
 - [Future Enhancements](#-future-enhancements)
-- [Project Structure](#-project-structure)
+
 
 ## 🎯 Project Overview
 
-This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to language models including GPT-5 (with reasoning capabilities), GPT-4o, and GPT-3.5.
+This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to language models including GPT-5 (with reasoning capabilities), GPT-4o, etc.
 
-This app was created for me entry to the Censys take home assignment. As requested, it was made partly using generative AI tools, specifically Claude Code. 
+This app was created for my entry to the Censys take home assignment. As requested, it was made partly using generative AI tools, specifically Claude Code. 
+
+## 📁 Project Structure
+
+```
+CensysGPT-2.0/
+├── Client/                          # React frontend
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── DataInput.jsx        # File/text input component
+│   │   │   ├── SummaryDisplay.jsx   # Results display component
+│   │   │   └── LoadingSpinner.jsx   # Loading state component
+│   │   ├── App.jsx                  # Main application component
+│   │   ├── App.css                  # Application styles
+│   │   └── main.jsx                 # React entry point
+│   ├── package.json                 # Frontend dependencies
+│   └── vite.config.js               # Vite configuration
+├── server/                          # Node.js backend
+│   ├── services/
+│   │   ├── responsesAnalyzer.js     # Active OpenAI service (comprehensive)
+│   ├── index.js                     # Express server & API routes
+│   ├── package.json                 # Backend dependencies
+│   └── .env.example                 # Environment template
+├── CLAUDE.md                        # Developer guidance
+└── README.md                        # This file
+```
 
 ## ✨ Features
 
-- **AI-Powered Analysis**: GPT based summarization with cybersecurity-focused prompts.
-- **Multiple AI Models**: Support for GPT-5 (reasoning), GPT-4o, o1, and GPT-3.5
+- **AI-Powered Analysis**: GPT based summarization with cybersecurity-focused prompts
+- **Multiple AI Models**: Support for GPT-5 (reasoning), GPT-4o, and others
 - **File Upload & Text Input**: Flexible data entry with drag-and-drop support
 - **Rich Summary Output**: Structured analysis with geographic, service, and risk assessments
 - **Export Capabilities**: Copy to clipboard and download summaries
@@ -144,42 +170,6 @@ Choose from available models:
 
 ## 🧪 Testing Instructions
 
-### Manual Testing
-
-1. **Start both servers** (backend and frontend as described above)
-
-2. **Test Sample Data**
-   ```bash
-   # In the UI:
-   - Click "Load Sample Data" button
-   - Select a model (e.g., gpt-4o-mini for faster testing)
-   - Click "Generate Summary"
-   - Verify summary appears with structured sections
-   ```
-
-3. **Test File Upload**
-   - Create a small JSON file with host data
-   - Drag and drop into the upload area
-   - Verify file content loads into text area
-   - Generate summary and verify results
-
-4. **Test Error Handling**
-   ```bash
-   # Invalid data:
-   - Enter "invalid json data"
-   - Should gracefully process as text
-
-   # Missing API key:
-   - Remove OPENAI_API_KEY from .env
-   - Restart server
-   - Should show configuration error
-   ```
-
-5. **Test Export Features**
-   - Generate a summary
-   - Click "Copy to Clipboard" - verify copied
-   - Click "Download Summary" - verify file downloads
-
 ### API Testing
 
 Test the backend directly:
@@ -204,27 +194,7 @@ curl -X POST http://localhost:3001/summarize \
 ```
 
 
-## 🤖 AI Techniques & Prompt Engineering
-
-### 1. Model Selection Strategy
-
-The application implements intelligent model detection and parameter adjustment:
-
-**Reasoning Models (GPT-5, o1)**
-- Use chain-of-thought processing for deeper analysis
-- Require higher token limits (16,000 vs 4,000)
-- No system messages (user messages only)
-- No temperature control (model-optimized)
-- Extended timeout (300 seconds)
-
-**Standard Models (GPT-4o, GPT-3.5)**
-- Direct response generation
-- Standard token limits (2,000-4,000)
-- System + user message structure
-- Temperature control (0.1 for consistency)
-- Standard timeout (300 seconds)
-
-### 2. Prompt Engineering
+## 🤖 Prompt Engineering
 
 **Structured Prompt Design:**
 
@@ -272,14 +242,11 @@ Dataset to Analyze:
 2. **Data Format**: Input data follows general Censys host data structure (flexible parsing)
 3. **Internet Connectivity**: Active internet connection for API calls
 4. **Modern Browser**: Recent versions of Chrome, Firefox, Safari, or Edge
-7. **Local Development**: Application runs on localhost (production deployment not configured)
-8. **API Costs**: Users are aware of OpenAI API usage costs (varies by model)
+5. **Local Development**: Application runs on localhost (production deployment not configured)
 
 ## 🔮 Future Enhancements
 
 Given the limited scope of this assignment, there are many desireable features that can be integrated. 
-
-### High Priority
 
 1. **Streaming Responses**
    - Implement SSE (Server-Sent Events) for real-time output
@@ -299,85 +266,30 @@ Given the limited scope of this assignment, there are many desireable features t
 4. **Model Comparison**
    - Side-by-side analysis from different models
    - Performance metrics (speed, cost, quality)
-   - A/B testing capabilities
 
 5. **Advanced Prompt Templates**
    - User-defined custom prompts
    - Template library for different analysis types
-   - Prompt versioning and management
 
 6. **Data Persistence**
    - Save analysis history to database
    - Search and filter previous summaries
    - Export historical data to CSV/PDF
 
-7. **Authentication & Multi-User**
-   - User accounts with OAuth integration
-   - Team workspaces and sharing
-   - Role-based access control
-
-8. **Real-time Censys Integration**
+7. **Real-time Censys Integration**
    - Direct Censys API connectivity
    - Query builder interface
    - Automatic data refresh
 
-9. **Cost Optimization**
+8. **Cost Optimization**
    - Local caching of common queries
    - Smart data chunking for large datasets
    - Cost tracking dashboard
 
-11. **Fine-tuned Models**
+9. **Fine-tuned Models**
     - Custom models trained on cybersecurity data
     - Domain-specific terminology recognition
     - Improved accuracy for security patterns
-
-12. **Machine Learning Features**
-    - Anomaly detection algorithms
-    - Trend prediction and forecasting
-    - Automated risk scoring
-
-14. **Mobile Applications**
-    - Native iOS app
-    - Native Android app
-    - Push notifications for critical findings
-
-15. **Advanced Analytics**
-    - Natural language query interface
-    - Correlation analysis across datasets
-    - Threat intelligence feed integration
-
-## 📁 Project Structure
-
-```
-CensysGPT-2.0/
-├── Client/                          # React frontend
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── DataInput.jsx        # File/text input component
-│   │   │   ├── SummaryDisplay.jsx   # Results display component
-│   │   │   └── LoadingSpinner.jsx   # Loading state component
-│   │   ├── App.jsx                  # Main application component
-│   │   ├── App.css                  # Application styles
-│   │   └── main.jsx                 # React entry point
-│   ├── package.json                 # Frontend dependencies
-│   └── vite.config.js               # Vite configuration
-├── server/                          # Node.js backend
-│   ├── services/
-│   │   ├── responsesAnalyzer.js     # Active OpenAI service (comprehensive)
-│   ├── index.js                     # Express server & API routes
-│   ├── package.json                 # Backend dependencies
-│   └── .env.example                 # Environment template
-├── CLAUDE.md                        # Developer guidance
-└── README.md                        # This file
-```
-
-## 🔒 Security Considerations
-
-- **API Keys**: Stored server-side only, never exposed to frontend
-- **Data Privacy**: File processing happens client-side when possible
-- **Input Validation**: Sanitized data input and error handling
-- **CORS**: Configured for local development (restrict in production)
-- **Environment Variables**: Sensitive data in .env (not committed)
 
 ## 🐛 Troubleshooting
 
