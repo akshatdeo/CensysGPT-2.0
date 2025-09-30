@@ -706,6 +706,11 @@ body.dark-mode .summary-content h2 {
   border-color: #404040;
 }
 
+body.dark-mode .summary-content strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
 body.dark-mode .loading-text p {
   color: #9ca3af;
 }
