@@ -1,8 +1,6 @@
-# 🔍 Censys AI Data Summarizer
+# CensysGPT 2.0 
 
-**AI Engineer Intern Take-Home Project**
-
-A full-stack AI agent application that transforms Censys host data into actionable security insights using OpenAI's advanced language models, including GPT-5 with chain-of-thought reasoning capabilities.
+A full-stack AI agent application that transforms Censys host data into actionable security insights using OpenAI's large language models. 
 
 ## 📋 Table of Contents
 
@@ -19,46 +17,36 @@ A full-stack AI agent application that transforms Censys host data into actionab
 
 ## 🎯 Project Overview
 
-This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to state-of-the-art language models including GPT-5 (with reasoning capabilities), GPT-4o, and GPT-3.5.
+This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to language models including GPT-5 (with reasoning capabilities), GPT-4o, and GPT-3.5.
 
 **Architecture:**
-- **Frontend**: React 19 + Vite for a modern, responsive user interface
+- **Frontend**: React 19 + Vite
 - **Backend**: Node.js + Express API with OpenAI integration
-- **AI**: OpenAI Chat Completions API supporting GPT-5, GPT-4o, o1, and more
-
-**Development Time**: ~4 hours (as per project requirements)
+- **AI**: OpenAI Chat Completions API.
 
 ## ✨ Features
 
-- **AI-Powered Analysis**: Advanced LLM-based summarization with cybersecurity-focused prompts
+- **AI-Powered Analysis**: GPT based summarization with cybersecurity-focused prompts.
 - **Multiple AI Models**: Support for GPT-5 (reasoning), GPT-4o, o1, and GPT-3.5
-- **Multi-format Data Input**: Support for JSON, CSV, and plain text formats
 - **File Upload & Text Input**: Flexible data entry with drag-and-drop support
 - **Rich Summary Output**: Structured analysis with geographic, service, and risk assessments
 - **Export Capabilities**: Copy to clipboard and download summaries
 - **Dark Mode**: Theme toggle with persistent preference
-- **Real-time Processing**: Live status updates and comprehensive error handling
-- **Responsive Design**: Mobile-friendly interface
 
 ## 🛠 Tech Stack
 
 **Frontend:**
-- React 19 - Modern UI framework
-- Vite - Fast build tool and dev server
-- CSS3 - Responsive styling with dark mode
+- React 19 
+- Vite 
+- CSS3 
 
 **Backend:**
-- Node.js - JavaScript runtime
-- Express - Web application framework
-- Axios - HTTP client for API calls
-- dotenv - Environment variable management
+- Node.js 
+- Express 
+- Axios 
+- dotenv 
 
-**AI Integration:**
-- OpenAI Chat Completions API
-- Model-specific parameter handling
-- Advanced prompt engineering for cybersecurity analysis
-
-## 🚀 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 
@@ -150,40 +138,13 @@ Choose from available models:
 ### 3. Generating Summary
 
 1. Click "Generate Summary"
-2. Wait for analysis (30-120 seconds for reasoning models)
-3. View structured security insights
+2. Wait for analysis, usually under 3 minutes. 
+3. View report.
 
 ### 4. Exporting Results
 
 - **Copy to Clipboard**: One-click copy
 - **Download**: Save as text file
-
-### Sample Data Format
-
-```json
-{
-  "hosts": [
-    {
-      "ip": "192.168.1.100",
-      "location": {
-        "country": "US",
-        "city": "San Francisco"
-      },
-      "services": [
-        {
-          "port": 80,
-          "service": "http",
-          "banner": "nginx/1.20.1"
-        }
-      ],
-      "autonomous_system": {
-        "name": "Example Corp",
-        "asn": 12345
-      }
-    }
-  ]
-}
-```
 
 ## 🧪 Testing Instructions
 
@@ -246,14 +207,6 @@ curl -X POST http://localhost:3001/summarize \
 # Expected: JSON response with summary and metadata
 ```
 
-### Expected Behavior
-
-✅ **Valid data** → Structured summaries with security insights
-✅ **Invalid JSON** → Falls back to text processing
-✅ **Missing API key** → Configuration error message
-✅ **Large datasets** → Automatically truncated to 200KB
-✅ **Network errors** → User-friendly error messages
-✅ **Reasoning models** → Extended processing time (normal)
 
 ## 🤖 AI Techniques & Prompt Engineering
 
@@ -308,28 +261,14 @@ Dataset to analyze:
 - **Actionability**: Emphasizes recommendations over descriptions
 - **Context Injection**: Embeds actual data within prompt
 
-### 3. Data Processing Pipeline
-
-```
-User Input → Frontend Validation → JSON Parsing
-              ↓
-     Truncation (200KB limit) → Prompt Template Injection
-              ↓
-     Model Detection → Parameter Adjustment
-              ↓
-     OpenAI API Call → Response Validation
-              ↓
-     Frontend Display → Export Options
-```
-
-### 4. Error Handling & Resilience
+### 3. Error Handling & Resilience
 
 - **Graceful Degradation**: Invalid JSON processes as plain text
 - **Token Management**: Automatic truncation with user notification
 - **Retry Logic**: Timeout handling with user-friendly messages
 - **Model Fallbacks**: Supports multiple model options
 
-### 5. Advanced Features
+### 4. Advanced Features
 
 **Dynamic Parameter Adjustment:**
 ```javascript
@@ -353,8 +292,6 @@ if (usesCompletionTokens) {
 2. **Data Format**: Input data follows general Censys host data structure (flexible parsing)
 3. **Internet Connectivity**: Active internet connection for API calls
 4. **Modern Browser**: Recent versions of Chrome, Firefox, Safari, or Edge
-5. **Data Size**: Datasets under 200KB for optimal performance (larger data truncated)
-6. **Single User**: No authentication or multi-user session management
 7. **Local Development**: Application runs on localhost (production deployment not configured)
 8. **API Costs**: Users are aware of OpenAI API usage costs (varies by model)
 
@@ -498,13 +435,4 @@ CensysGPT-2.0/
 
 This project is licensed under the ISC License.
 
-## 🙏 Acknowledgments
 
-- **Censys**: For providing the project requirements and sample data
-- **OpenAI**: For providing advanced language models
-- **React & Vite**: For modern frontend development tools
-
----
-
-**Built as an AI Engineer Intern take-home project**
-**Completed in ~4 hours using AI-assisted development techniques**
