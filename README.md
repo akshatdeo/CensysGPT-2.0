@@ -11,12 +11,15 @@ A full-stack AI agent application that transforms Censys host data into actionab
 - [Installation & Setup](#-installation--setup)
 - [Usage Guide](#-usage-guide)
 - [Testing Instructions](#-testing-instructions)
-- [rompt Engineering](#-prompt-engineering)
+- [Prompt Engineering](#-prompt-engineering)
 - [Assumptions](#-assumptions)
 - [Future Enhancements](#-future-enhancements)
 
 
 ## 🎯 Project Overview
+
+![alt text](https://github.com/akshatdeo/CensysGPT-2.0/blob/main/Samples/Homepage.jpg)
+
 
 This application provides an intelligent summarization service for Censys host data, enabling security analysts to quickly extract key insights, identify patterns, and assess risks from large datasets. The system integrates with OpenAI's Chat Completions API, providing access to language models including GPT-5 (with reasoning capabilities), GPT-4o, etc.
 
